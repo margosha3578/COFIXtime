@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<form action="{% url 'schedule_making' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+            <h4>Дата понедельника:</h4>
+                 {{ form.week }}
+    </div>
+    <button type="submit" class="btn btn-primary">Создать</button>
+  </form>
+
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_content %}
+<div class="col-md-8 order-md-1">
+       <h1 class="h2">{{ profile_information.name }}</h1>
+       <hr>
+       <h4>Post: {{ profile_information.post }}</h4>
+       <h4>Related cafe: {{ profile_information.related_cafe }}</h4>
+       <h4>Email: {{ profile_information.email }}</h4>
+       <h4>Telephone number: {{ profile_information.telephone_number }}</h4>
+
+</div>
+
+{% endblock %}

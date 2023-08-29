@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<h1>Staff</h1>
+{% if profile_information.post == 'UK'%}
+    {% for employee in employees %}
+        {% if employee.name != profile_information.name %}
+            <div class="col-md-8 order-md-1">
+                   <h2 class="h2">{{ employee.name }}</h2>
+                   <hr>
+                   <h4>Post: {{ employee.post }}</h4>
+                   <h4>Related cafe: {{ employee.related_cafe }}</h4>
+                   <h4>Email: {{ employee.email }}</h4>
+                   <h4>Telephone number: {{ employee.telephone_number }}</h4>
+
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <h2>Доступ на страницу ограничен</h2>
+{% endif %}
+{% endblock %}

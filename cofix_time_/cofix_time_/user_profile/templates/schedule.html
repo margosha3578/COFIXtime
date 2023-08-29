@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block page_content %}
+{% load string_division %}
+
+<h1>Schedule </h1>
+<h2>{{ last_schedule_week }}</h2>
+<h6>Сегодня: {{ today_date }}</h6>
+
+
+{% for last_schedule in last_schedules %}
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <td> </td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+                    <td>20</td>
+                    <td>21</td>
+                    <td>22</td>
+                    <td>23</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in last_schedule %}
+                    <tr>
+                        <td>{{ day.day_of_week }}</td>
+                        <td>{% for person in day.hour_6_7|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_7_8|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_8_9|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_9_10|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_10_11|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_11_12|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_12_13|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_13_14|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_14_15|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_15_16|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_16_17|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_17_18|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_18_19|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_19_20|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_20_21|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_21_22|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_22_23|split:"," %} {{ person }} {% endfor %}</td>
+                        <td>{% for person in day.hour_23_24|split:"," %} {{ person }} {% endfor %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+
+{% if user_information.post == 'UK'%}
+    {% for cafe in all_cafes %}
+        <div class="col-md-8 order-md-1">
+               <h1 class="h2">{{ cafe.name }}</h1>
+               <hr>
+               <h4>Address: {{ cafe.address }}</h4>
+               <h4>Manager: {{ manager_information.name }}
+                            {{ manager_information.telephone_number}}</h4>
+               {% for one_working_hours in working_hours %}
+                    {% if cafe.name == one_working_hours.name %}
+                          <h4>Количество работников на смене:
+                           C 00 до 01: {{ one_working_hours.hour_00_01 }}
+                           {{ one_working_hours.hour_01_02 }}
+                           {{ one_working_hours.hour_02_03 }}
+                           {{ one_working_hours.hour_03_04 }}
+                           {{ one_working_hours.hour_04_05 }}
+                           {{ one_working_hours.hour_05_06 }}
+                           {{ one_working_hours.hour_06_07 }}
+                           {{ one_working_hours.hour_07_08 }}
+                           {{ one_working_hours.hour_08_09 }}
+                           {{ one_working_hours.hour_09_10 }}
+                           {{ one_working_hours.hour_10_11 }}
+                           {{ one_working_hours.hour_11_12 }}
+                           {{ one_working_hours.hour_12_13 }}
+                           {{ one_working_hours.hour_13_14 }}
+                           {{ one_working_hours.hour_14_15 }}
+                           {{ one_working_hours.hour_15_16 }}
+                           {{ one_working_hours.hour_16_17 }}
+                           {{ one_working_hours.hour_17_18 }}
+                           {{ one_working_hours.hour_18_19 }}
+                           {{ one_working_hours.hour_19_20 }}
+                           {{ one_working_hours.hour_20_21 }}
+                           {{ one_working_hours.hour_21_22 }}
+                           {{ one_working_hours.hour_22_23 }}
+                           {{ one_working_hours.hour_23_24 }}</h4>
+                    {% endif %}
+               {% endfor %}
+        </div>
+    {% endfor %}
+
+{% else %}
+    <div class="col-md-8 order-md-1">
+               <h1 class="h2">{{ rel_cafe_information.name }}</h1>
+               <hr>
+               <h4>Address: {{ rel_cafe_information.address }}</h4>
+               <h4>Manager: {{ manager_information.name }}
+                            {{ manager_information.telephone_number}}</h4>
+
+{% endif %}
+{% endblock %}

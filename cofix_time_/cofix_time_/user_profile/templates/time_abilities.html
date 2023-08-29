@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+{% if profile_information.post == 'UK'%}
+    <h3>Возможности:</h3>
+    {% for week in weeks %}
+        <h4><b>{{ week }}</b></h4><hr>
+        {% for ability in abilities %}
+            {% if week == ability.week %}
+                <div class="media pt-3">
+                    <p class="media-body pb-3 mb-0 lh-125 border-bottom border-black">
+                        <strong>{{ ability.user_name }}</strong><br>
+                        Пн: с {{ ability.monday_1}} до {{ ability.monday_2}}<br>
+                        Вт: с {{ ability.tuesday_1}} до {{ ability.tuesday_2}}<br>
+                        Ср: с {{ ability.wednesday_1}} до {{ ability.wednesday_2}}<br>
+                        Чт: с {{ ability.thursday_1}} до {{ ability.thursday_2}}<br>
+                        Пт: с {{ ability.friday_1}} до {{ ability.friday_2}}<br>
+                        Сб: с {{ ability.saturday_1}} до {{ ability.saturday_2}}<br>
+                        Вс: с {{ ability.sunday_1}} до {{ ability.sunday_2}}
+                    </p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    <a href="/schedule_making/">
+        <button>Создать расписание</button>
+    </a>
+    {% endfor %}
+
+{% else %}
+<form action="/time_abilities/" method="post">
+    <h1>Time Abilities</h1>
+    <hr>
+    <h6>*Указывайте время только целыми(6, 12, 23 и тд), выходные помечайте 'вых' в обеих клетках</h6>
+    {% csrf_token %}
+    <h4>Дата понедельника: {{ form.week }}</h4>
+    <h4>Пн: c {{ form.monday_1 }} по {{ form.monday_2 }}</h4>
+    <h4>Вт: c {{ form.tuesday_1 }} по {{ form.tuesday_2 }}</h4>
+    <h4>Ср: c {{ form.wednesday_1 }} по {{ form.wednesday_2 }}</h4>
+    <h4>Чт: c {{ form.thursday_1 }} по {{ form.thursday_2 }}</h4>
+    <h4>Пт: c {{ form.friday_1 }} по {{ form.friday_2 }}</h4>
+    <h4>Сб: c {{ form.saturday_1 }} по {{ form.saturday_2 }}</h4>
+    <h4>Вс: c {{ form.sunday_1 }} по {{ form.sunday_2 }}</h4>
+    <button type="submit" >Отправить</button>
+</form>
+{% endif %}
+
+{% endblock %}
