@@ -23,6 +23,7 @@ class RelatedCafe(django_models.Model):
 
 class TimeAbilities(django_models.Model):
     user_name = django_models.CharField(max_length=20)
+    related_cafe = django_models.CharField(max_length=20, blank=True)
     week = django_models.DateField('Понедельник на неделе')
     monday_1 = django_models.CharField(max_length=20)
     monday_2 = django_models.CharField(max_length=20)

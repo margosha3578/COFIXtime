@@ -24,9 +24,11 @@ def user_profile(request):
 def time_abilities(request):
     pk = request.session.get('user_id')
     profile_information = UserProfile.objects.get(pk=pk)
+    user = User.objects.get(pk=pk)
+
     today_date = datetime.date.today()
     abilities = TimeAbilities.objects.all()
-    user = User.objects.get(pk=pk)
+    cafes_names = list(RelatedCafe.objects.values('id', 'name'))
 
     weeks_values = TimeAbilities.objects.values('week')
     weeks_back = list()
@@ -50,6 +52,7 @@ def time_abilities(request):
             if last_ability <= today_date:
                 time_ability = TimeAbilities(
                     user_name=profile_information.name,
+                    related_cafe=profile_information.related_cafe,
                     week=form.cleaned_data['week'],
                     monday_1=form.cleaned_data['monday_1'],
                     monday_2=form.cleaned_data['monday_2'],
@@ -77,6 +80,7 @@ def time_abilities(request):
         'today_date': today_date,
         'profile_information': profile_information,
         'abilities': abilities,
+        'cafes_names': cafes_names,
         'weeks': weeks
     }
     return render(request, 'time_abilities.html', context)
@@ -109,13 +113,9 @@ def schedule(request):
         last_schedules = []
         ids = list(CafeWorkingHours.objects.values_list('name', flat=True))
         for id in ids:
-            print(id)
             day_info = CafeWorkingHours.objects.values().get(name=id)
-            print(day_info['name_id'])
             last_schedule = ScheduleForOneDay.objects.filter(cafe=day_info['name_id'], week=last_schedule_week)
-            print(last_schedule)
             last_schedules.append(last_schedule)
-        print(last_schedules)
     except Exception:
         last_schedule_week = 'Нет созданных расписаний'
         last_schedules = 'Нет созданных расписаний'
@@ -164,51 +164,49 @@ def schedule_making(request):
             obj = CafeWorkingHours()
             fields = [(field.name) for field in obj._meta.fields]
             fields = fields[2::]
-            hours = []
+            working_hours = []
             for name in fields:
                 list_name = name.split('_')
-                hours.append(int(list_name[1]))
-            hours_dict = dict(zip(hours, fields))
+                working_hours.append(int(list_name[1]))
+            hours_dict = dict(zip(working_hours, fields))
 
-            ids = list(CafeWorkingHours.objects.values_list('id', flat=True))
-            for id in ids:
-                day_info = CafeWorkingHours.objects.values().get(id=id)
+            cafe_ids = list(CafeWorkingHours.objects.values_list('name', flat=True))
+            cafes_dict = RelatedCafe.objects.values('id', 'name')
+            for cafe_id in cafe_ids:
+                cafe_dict = cafes_dict[cafe_ids.index(cafe_id)]
+                day_info = CafeWorkingHours.objects.values().get(name=cafe_id)
                 for day_ in list_of_days:
 
-                    obj = ScheduleForOneDay()
-                    fields = [(field.name) for field in obj._meta.fields]
-                    first_part = fields[:3:]
-                    one_day_schedule_first_part = dict.fromkeys(first_part, None)
-                    second_part = fields[3::]
-                    one_day_schedule_second_part = dict.fromkeys(second_part, set())
-                    one_day_schedule = one_day_schedule_first_part | one_day_schedule_second_part
+                    one_day_schedule = {'id': None, 'cafe': None, 'week': None, 'day_of_week': set(), 'hour_6_7': set(),
+                                        'hour_7_8': set(), 'hour_8_9': set(), 'hour_9_10': set(), 'hour_10_11': set(),
+                                        'hour_11_12': set(), 'hour_12_13': set(), 'hour_13_14': set(),
+                                        'hour_14_15': set(), 'hour_15_16': set(), 'hour_16_17': set(),
+                                        'hour_17_18': set(), 'hour_18_19': set(), 'hour_19_20': set(),
+                                        'hour_20_21': set(), 'hour_21_22': set(), 'hour_22_23': set(),
+                                        'hour_23_24': set()}
 
                     one_day_schedule['week'] = week
                     one_day_schedule['cafe'] = day_info['name_id']
                     one_day_schedule['day_of_week'] = day_[:-2:]
 
-                    employees = UserProfile.objects.filter(post__in=['SS', 'Barista'],
-                                                           related_cafe=day_info['name_id'])
+                    time_abilities_ = TimeAbilities.objects.filter(week=week,
+                                                                   related_cafe=cafe_dict['name']).values()
 
-                    for employee in employees:
+                    for time_ability in time_abilities_:
                         try:
-                            time_abilities_ = TimeAbilities.objects.values().get(week=week,
-                                                                                 user_name=employee.name)
-                            try:
-                                hour_ = int(time_abilities_[day_])
-                                hour_name = hours_dict[hour_]
-                                if hour_ in hours and day_info[hour_name] != 0:
-                                    day_end = list_of_days_end[list_of_days.index(day_)]
-                                    hour_ = int(time_abilities_[day_])
-                                    hour_end = int(time_abilities_[day_end])
-                                    while hour_end != hour_:
-                                        one_day_schedule[hour_name].add(time_abilities_['user_name'])
-                                        hour_ += 1
-                            except ValueError:
-                                pass
+                            hour_start = int(time_ability[day_])
+                            day_end = list_of_days_end[list_of_days.index(day_)]
+                            hour_end = int(time_ability[day_end])
+                            while hour_end > hour_start:
+                                hour_name = hours_dict[hour_start]
+                                if day_info[hour_name] != 0:
+                                    hour_name = hours_dict[hour_start]
+                                    one_day_schedule[hour_name].add(time_ability['user_name'])
+                                    hour_start += 1
+                                else:
+                                    hour_start += 1
                         except Exception:
                             pass
-                    print(6)
                     schedule_for_one_day = ScheduleForOneDay.create(one_day_schedule)
                     schedule_for_one_day.save()
             return redirect('schedule')

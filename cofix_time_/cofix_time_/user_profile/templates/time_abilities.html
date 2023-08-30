@@ -21,10 +21,10 @@
                 </div>
             {% endif %}
         {% endfor %}
-    <a href="/schedule_making/">
+    {% endfor %}
+ <a href="/schedule_making/">
         <button>Создать расписание</button>
     </a>
-    {% endfor %}
 
 {% else %}
 <form action="/time_abilities/" method="post">
