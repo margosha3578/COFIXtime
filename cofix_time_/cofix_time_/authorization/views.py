@@ -13,13 +13,11 @@ def sign_in(request):
     elif request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f'Hi {username.title()}, welcome!')
                 request.session['user_id'] = user.id
                 return redirect('user_profile')
-        messages.error(request, f'Invalid username or password')
         return render(request, 'login.html', {'form': form})

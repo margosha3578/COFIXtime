@@ -16,8 +16,8 @@
     <!-- Login Form -->
     <form method="POST">
       {% csrf_token %}
-      <input type="text" id="username" class="fadeIn second" name="login" placeholder="username" value="{{ form.username }}">
-      <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" value="{{ form.password }}">
+        <p id="username" class="fadeIn second" aria-placeholder="username">{{ form.username }}</p>
+        <p id="password" class="fadeIn third">{{ form.password }}</p>
       <input type="submit" class="fadeIn fourth" value="Login">
     </form>
 
