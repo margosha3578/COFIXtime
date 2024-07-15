@@ -1,1 +1,1 @@
-site for crearing working schedule (Django)
+site for creating working schedule (Django)
